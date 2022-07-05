@@ -1,15 +1,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using ConcurrentQueueProcessing;
+using ConcurrentQueueProcessing.Source;
 using Xunit;
 
-namespace tests
+namespace ConcurrentQueueProcessing.Tests
 {
     public class ConcurrentQueueProcessingReturnableTest
     {
-        private int _numberOfProvides;
-
         /// <summary>
         /// Логика теста:
         ///  - на вход список строк, которые берутся из ключей словаря
@@ -25,26 +23,30 @@ namespace tests
             {"abcde", 5},
         };
 
+        private int _times;
+
         [Theory]
         [InlineData(1, 1)]
+        [InlineData(3, 1)]
         [InlineData(1, 10)]
+        [InlineData(3, 10)]
         [InlineData(10, 10)]
         public void Test(int maxTreads, int numberOfProvides)
         {
-            _numberOfProvides = numberOfProvides;
-
+            _times = numberOfProvides;
             var outputQueue = new ConcurrentQueue<int>();
-
             var processing = new ConcurrentQueueProcessingReturnable<string, int>(
                     maxTreads,
-                    0,
                     DataProvider,
                     ItemProcessing,
-                    outputQueue
+                    ref outputQueue
                 );
 
             Assert.True(processing.Run());
-            Assert.Equal(outputQueue.Count, _data.Values.Count);
+
+            processing.Continue();
+
+            Assert.Equal(_data.Values.Count * numberOfProvides, outputQueue.Count);
             foreach (var item in outputQueue.ToList())
             {
                 Assert.Contains(item, _data.Values);
@@ -53,12 +55,11 @@ namespace tests
 
         private IEnumerable<string> DataProvider()
         {
-            if (_numberOfProvides == 0)
+            if (_times == 0)
             {
                 return new List<string>();
             }
-
-            _numberOfProvides--;
+            _times--;
 
             return _data.Keys;
         }
