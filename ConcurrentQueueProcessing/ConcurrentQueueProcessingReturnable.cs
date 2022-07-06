@@ -2,19 +2,20 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace ConcurrentQueueProcessing.Source
+namespace ConcurrentQueueProcessing
 {
-    public class ConcurrentQueueProcessingReturnable<TInput, TOutput> : ConcurrentQueueProcessingBase<TInput>
+    public class ConcurrentQueueProcessingReturnable<TInput, TOutput>
+        : ConcurrentQueueProcessingBase<TInput>
     {
         private readonly ConcurrentQueue<TOutput> _output;
         private readonly Func<TInput, TOutput> _itemProcessing;
 
         public ConcurrentQueueProcessingReturnable(
                 int maxTasksCount,
-                Func<IEnumerable<TInput>> collectionDataProvider,
+                Func<IEnumerable<TInput>> dataProvider,
                 Func<TInput, TOutput> itemProcessing,
                 ref ConcurrentQueue<TOutput> output
-            ) : base(maxTasksCount, collectionDataProvider)
+            ) : base(maxTasksCount, dataProvider)
         {
             _itemProcessing = itemProcessing;
             _output = output;

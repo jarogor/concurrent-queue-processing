@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using ConcurrentQueueProcessing.Source;
+using ConcurrentQueueProcessing;
 using Xunit;
 
-namespace ConcurrentQueueProcessing.Tests
+namespace Tests
 {
     public class ConcurrentQueueProcessingTest
     {
@@ -22,9 +21,10 @@ namespace ConcurrentQueueProcessing.Tests
         };
 
         private int _times;
-        private readonly ConcurrentQueue<int> _result = new();
+        private ConcurrentQueue<int> _result = null!;
 
         [Theory]
+        [InlineData(1, 0)]
         [InlineData(1, 1)]
         [InlineData(3, 1)]
         [InlineData(1, 10)]
@@ -32,12 +32,11 @@ namespace ConcurrentQueueProcessing.Tests
         [InlineData(10, 10)]
         public void Test(int maxTreads, int numberOfProvides)
         {
+            _result = new ConcurrentQueue<int>();
             _times = numberOfProvides;
             var processing = new ConcurrentQueueProcessing<string>(maxTreads, DataProvider, ItemProcessing);
 
-            Assert.True(processing.Run());
-
-            processing.Continue();
+            processing.StartTracking();
 
             var expected = numberOfProvides * _data.Sum(it => it.Length);
 

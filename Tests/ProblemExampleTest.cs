@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Xunit;
 
-namespace ConcurrentQueueProcessing.Tests
+namespace Tests
 {
     public class ProblemExampleTest
     {

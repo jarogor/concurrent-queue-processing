@@ -1,10 +1,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using ConcurrentQueueProcessing.Source;
+using ConcurrentQueueProcessing;
 using Xunit;
 
-namespace ConcurrentQueueProcessing.Tests
+namespace Tests
 {
     public class ConcurrentQueueProcessingReturnableTest
     {
@@ -26,6 +26,7 @@ namespace ConcurrentQueueProcessing.Tests
         private int _times;
 
         [Theory]
+        [InlineData(1, 0)]
         [InlineData(1, 1)]
         [InlineData(3, 1)]
         [InlineData(1, 10)]
@@ -42,9 +43,7 @@ namespace ConcurrentQueueProcessing.Tests
                     ref outputQueue
                 );
 
-            Assert.True(processing.Run());
-
-            processing.Continue();
+            processing.StartTracking();
 
             Assert.Equal(_data.Values.Count * numberOfProvides, outputQueue.Count);
             foreach (var item in outputQueue.ToList())

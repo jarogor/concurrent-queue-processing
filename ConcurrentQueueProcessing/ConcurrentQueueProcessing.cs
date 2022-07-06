@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 
-namespace ConcurrentQueueProcessing.Source
+namespace ConcurrentQueueProcessing
 {
-    public class ConcurrentQueueProcessing<TInput> : ConcurrentQueueProcessingBase<TInput>
+    public class ConcurrentQueueProcessing<TInput>
+        : ConcurrentQueueProcessingBase<TInput>
     {
         private readonly Action<TInput> _itemProcessing;
 
         public ConcurrentQueueProcessing(
                 int maxTasksCount,
-                Func<IEnumerable<TInput>> collectionDataProvider,
+                Func<IEnumerable<TInput>> dataProvider,
                 Action<TInput> itemProcessing
-            ) : base(maxTasksCount, collectionDataProvider)
+            ) : base(maxTasksCount, dataProvider)
         {
             _itemProcessing = itemProcessing;
         }
