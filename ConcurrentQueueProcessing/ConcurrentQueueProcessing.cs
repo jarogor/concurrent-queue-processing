@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace ConcurrentQueueProcessing
 {
     public class ConcurrentQueueProcessing<TInput>
