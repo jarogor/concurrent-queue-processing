@@ -4,17 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcurrentQueueProcessing
-{
-    public abstract class ConcurrentQueueProcessingBase<TInput>
-    {
+namespace ConcurrentQueueProcessing {
+    public abstract class ConcurrentQueueProcessingBase<TInput> {
         protected readonly ConcurrentQueue<TInput> Input;
 
         private readonly Task[] _tasks;
         private readonly Func<IEnumerable<TInput>> _dataProvider;
 
-        protected ConcurrentQueueProcessingBase(int maxTasksCount, Func<IEnumerable<TInput>> dataProvider)
-        {
+        protected ConcurrentQueueProcessingBase(int maxTasksCount, Func<IEnumerable<TInput>> dataProvider) {
             Input = new ConcurrentQueue<TInput>();
             _tasks = new Task[maxTasksCount];
             _dataProvider = dataProvider;
@@ -29,15 +26,12 @@ namespace ConcurrentQueueProcessing
         ///     - завершится
         /// </summary>
         /// <returns></returns>
-        public bool Start()
-        {
-            if (!FillQueue())
-            {
+        public bool Start() {
+            if (!FillQueue()) {
                 return false;
             }
 
-            for (var i = 0; i < _tasks.Length; i++)
-            {
+            for (var i = 0; i < _tasks.Length; i++) {
                 _tasks[i] = Task.Factory.StartNew(ReadQueue);
             }
 
@@ -49,12 +43,9 @@ namespace ConcurrentQueueProcessing
         /// Дата провайдер вызывается до тех пор, пока он что-либо возвращает.
         /// Обработка завершится только когда дата провайдер прекратит поставлять данные.
         /// </summary>
-        public void StartTracking()
-        {
-            while (true)
-            {
-                if (!Input.IsEmpty || Start())
-                {
+        public void StartTracking() {
+            while (true) {
+                if (!Input.IsEmpty || Start()) {
                     continue;
                 }
 
@@ -66,25 +57,19 @@ namespace ConcurrentQueueProcessing
             Task.WaitAll(list.ToArray());
         }
 
-        private bool FillQueue()
-        {
-            try
-            {
+        private bool FillQueue() {
+            try {
                 var enumerable = _dataProvider().ToList();
-                if (enumerable.Count == 0)
-                {
+                if (enumerable.Count == 0) {
                     return false;
                 }
 
-                foreach (var item in enumerable)
-                {
+                foreach (var item in enumerable) {
                     Input.Enqueue(item);
                 }
 
                 return true;
-            }
-            catch
-            {
+            } catch {
                 return false;
             }
         }

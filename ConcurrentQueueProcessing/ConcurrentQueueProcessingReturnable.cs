@@ -2,11 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace ConcurrentQueueProcessing
-{
+namespace ConcurrentQueueProcessing {
     public class ConcurrentQueueProcessingReturnable<TInput, TOutput>
-        : ConcurrentQueueProcessingBase<TInput>
-    {
+        : ConcurrentQueueProcessingBase<TInput> {
         private readonly ConcurrentQueue<TOutput> _output;
         private readonly Func<TInput, TOutput> _itemProcessing;
 
@@ -15,23 +13,17 @@ namespace ConcurrentQueueProcessing
                 Func<IEnumerable<TInput>> dataProvider,
                 Func<TInput, TOutput> itemProcessing,
                 ref ConcurrentQueue<TOutput> output
-            ) : base(maxTasksCount, dataProvider)
-        {
+            ) : base(maxTasksCount, dataProvider) {
             _itemProcessing = itemProcessing;
             _output = output;
         }
 
-        protected override void ReadQueue()
-        {
-            try
-            {
-                while (Input.TryDequeue(out var item))
-                {
+        protected override void ReadQueue() {
+            try {
+                while (Input.TryDequeue(out var item)) {
                     _output.Enqueue(_itemProcessing(item));
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Console.WriteLine(ex);
             }
         }
