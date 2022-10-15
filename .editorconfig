@@ -3,7 +3,6 @@ root = true
 # All files
 [*]
 indent_style = space
-insert_final_newline = true
 
 # Xml files
 [*.xml]
@@ -20,6 +19,7 @@ tab_width = 4
 
 # New line preferences
 end_of_line = crlf
+insert_final_newline = false
 
 #### .NET Coding Conventions ####
 [*.{cs,vb}]
@@ -127,24 +127,24 @@ csharp_using_directive_placement = outside_namespace:silent
 #### C# Formatting Rules ####
 
 # New line preferences
-csharp_new_line_before_catch = false
-csharp_new_line_before_else = false
-csharp_new_line_before_finally = false
+csharp_new_line_before_catch = true
+csharp_new_line_before_else = true
+csharp_new_line_before_finally = true
 csharp_new_line_before_members_in_anonymous_types = true
 csharp_new_line_before_members_in_object_initializers = true
-csharp_new_line_before_open_brace = none
+csharp_new_line_before_open_brace = all
 csharp_new_line_between_query_expression_clauses = true
 
 # Indentation preferences
 csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
-csharp_indent_case_contents_when_block = false
+csharp_indent_case_contents_when_block = true
 csharp_indent_labels = one_less_than_current
 csharp_indent_switch_labels = true
 
 # Space preferences
-csharp_space_after_cast = true
+csharp_space_after_cast = false
 csharp_space_after_colon_in_inheritance_clause = true
 csharp_space_after_comma = true
 csharp_space_after_dot = false
@@ -169,7 +169,7 @@ csharp_space_between_square_brackets = false
 
 # Wrapping preferences
 csharp_preserve_single_line_blocks = true
-csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_statements = true
 
 #### Naming styles ####
 [*.{cs,vb}]
